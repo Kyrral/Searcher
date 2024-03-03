@@ -2,7 +2,7 @@
 
 void Searcher::searchFile(const fs::path& directory, const std::string& filename)
 {
-
+try {
 	for (const auto& entry : fs::directory_iterator(directory)) {
 		try {
 
@@ -29,18 +29,15 @@ void Searcher::searchFile(const fs::path& directory, const std::string& filename
 					searchFile(entry, filename);
 				}
 			}
-		} catch(std::exception e)
-		{
-			std::cout << e.what() << std::endl;
-		}
+		} catch(std::exception e) {}
 	}
+} catch(std::exception e) {}
 }
 
 void Searcher::Worker(const fs::path& directory, const std::string& filename)
 {
 	if (!fileFound.load())
 	{
-		std::cout << directory << "\n";
 		searchFile(directory, filename);
 	}
 	std::lock_guard<std::mutex> lock(mtxCount);
